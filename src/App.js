@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import './App.css';
 
 const App = () => {
   const [moleIndex, setMoleIndex] = useState(null);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(30);
+  const [hammerIndex, setHammerIndex] = useState(null); // ハンマーが表示される位置
   const gridSize = 9; // 3x3のグリッド
 
   // モグラの位置をランダムに変更
@@ -33,7 +35,13 @@ const App = () => {
   const hitMole = (index) => {
     if (index === moleIndex) {
       setScore(score + 1);
+      setHammerIndex(index); // ハンマーの位置を設定
       setMoleIndex(null);
+
+      // ハンマーを0.5秒後に非表示にする
+      setTimeout(() => {
+        setHammerIndex(null);
+      }, 500);
     }
   };
 
@@ -50,12 +58,29 @@ const App = () => {
             style={{
               width: '100px',
               height: '100px',
-              backgroundColor: index === moleIndex ? 'brown' : 'lightgreen',
               border: '1px solid black',
               cursor: 'pointer',
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
-            {index === moleIndex && 'モグラ'}
+            {/* モグラまたは穴の画像 */}
+            <img
+              src={index === moleIndex ? "/assets/mole.png" : "/assets/hole.png"}
+              alt={index === moleIndex ? "モグラ" : "穴"}
+              style={{ width: '100%', height: '100%' }}
+            />
+
+            {/* クリック時に表示されるハンマー */}
+            {index === hammerIndex && (
+              <img
+                src="/assets/hammer.png"
+                alt="ハンマー"
+                className="hammer"
+              />
+            )}
           </div>
         ))}
       </div>
